@@ -57,6 +57,7 @@ export async function sendThreadMessage(
   data: ChatMessage, uid: string,
 ) {
   try {
+    const time = FieldValue.serverTimestamp();
     await ChatCollection.doc(data.chatId)
       .collection("messages")
       .doc(data.messageId).update(
@@ -64,7 +65,7 @@ export async function sendThreadMessage(
           "threadMessages": FieldValue.arrayUnion({
             "content": data.content,
             "type": data.type,
-            "timestamp": FieldValue.serverTimestamp(),
+            "timestamp": time,
             "user": UserCollection.doc(uid),
             "attachments": data.attachments,
           }),
